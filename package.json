@@ -1,0 +1,52 @@
+{
+  "name": "cli-subs",
+  "version": "0.0.0",
+  "description": "A command line tool for downloading subtitles",
+  "bin": "./lib/cli-subs.js",
+  "main": "lib/cli-subs.js",
+  "files": [
+    "/lib"
+  ],
+  "scripts": {
+    "start": "ts-node ./src/cli-subs.ts",
+    "build": "npm run clean && tsc",
+    "version": "npm run build && git add -A lib",
+    "postversion": "git push && git push --tags",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "clean": "rm -rf ./lib",
+    "dev-link": "npm run build && npm link && npm link --local cli-subs",
+    "remove-link": "npm unlink --local cli-subs && npm unlink"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lagerone/cli-subs.git"
+  },
+  "author": "Daniel Lager <daniel.lager@gmail.com> (https://github.com/lagerone)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lagerone/cli-subs/issues"
+  },
+  "homepage": "https://github.com/lagerone/cli-subs#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.4",
+    "@types/mz": "0.0.32",
+    "@types/node": "^11.9.4",
+    "@types/prompts": "^1.2.0",
+    "@types/request-promise-native": "^1.0.15",
+    "eslint": "^5.13.0",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "mz": "^2.7.0",
+    "prompts": "^2.0.2",
+    "request-promise-native": "^1.0.5",
+    "winston": "^3.2.1"
+  }
+}
