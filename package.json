@@ -46,6 +46,7 @@
     "dotenv": "^6.2.0",
     "mz": "^2.7.0",
     "prompts": "^2.0.2",
+    "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "winston": "^3.2.1"
   }
