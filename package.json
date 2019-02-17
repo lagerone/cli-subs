@@ -1,6 +1,6 @@
 {
   "name": "cli-subs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A command line tool for downloading subtitles",
   "bin": "./lib/cli-subs.js",
   "main": "lib/cli-subs.js",
