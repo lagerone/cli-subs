@@ -1,5 +1,7 @@
 # cli-subs
 
+![cli subs screen demo](./cli-subs-screen.gif)
+
 A command line tool for downloading subtitles from [SubDB](http://thesubdb.com).
 
 ## Install
