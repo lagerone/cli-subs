@@ -11,27 +11,33 @@ import { downloadSubtitles, getLanguagesForFile } from './subtitle-service';
 const validMovieFileExtensions = ['.mkv', '.mp4', '.avi'];
 const validSubtitleFileExtensions = ['.srt', '.sub'];
 
+const getValidFilePathsFromDirectory = async (dirPath: string) => {
+  const filesAndDirs = await fs.readdir(dirPath);
+  return await filesAndDirs.reduce(async (files, currentFileOrDir) => {
+    const resolvedFiles = await files;
+    const currentPath = path.join(dirPath, currentFileOrDir);
+    const stats = await fs.stat(currentPath);
+    if (
+      (stats.isFile() &&
+        validMovieFileExtensions.includes(path.extname(currentPath))) ||
+      validSubtitleFileExtensions.includes(path.extname(currentPath))
+    ) {
+      return [...resolvedFiles, currentPath];
+    }
+    return resolvedFiles;
+  }, Promise.resolve([]));
+};
+
 const run = async () => {
   const cwd = process.cwd();
-  const filesAndDirs = await fs.readdir(cwd);
-  const filePaths = await filesAndDirs.reduce(
-    async (files, currentFileOrDir) => {
-      const resolvedFiles = await files;
-      const currentPath = path.join(cwd, currentFileOrDir);
-      const stats = await fs.stat(currentPath);
-      if (
-        (stats.isFile() &&
-          validMovieFileExtensions.includes(path.extname(currentPath))) ||
-        validSubtitleFileExtensions.includes(path.extname(currentPath))
-      ) {
-        return [...resolvedFiles, currentPath];
-      }
-      return resolvedFiles;
-    },
-    Promise.resolve([])
-  );
+  const validFilePaths = await getValidFilePathsFromDirectory(cwd);
 
-  const fileOptions: prompts.Choice[] = filePaths.map(filePath => {
+  if (!validFilePaths) {
+    logger.warn(`No valid files found at "${cwd}".`);
+    process.exit(0);
+  }
+
+  const fileOptions: prompts.Choice[] = validFilePaths.map(filePath => {
     return {
       title: path.basename(filePath),
       value: filePath,
@@ -50,7 +56,7 @@ const run = async () => {
   ]);
 
   if (!movieFilePath) {
-    logger.warn('No file selected. Program will exit.');
+    logger.warn('No file selected.');
     process.exit(0);
   }
 
@@ -76,6 +82,11 @@ const run = async () => {
       initial: 0,
     },
   ]);
+
+  if (!subtitleLanguage) {
+    logger.warn('No subtitle language selected.');
+    process.exit(0);
+  }
 
   logger.info(
     `Searching for subtitles for "${movieFileName}" and language "${subtitleLanguage}".`
